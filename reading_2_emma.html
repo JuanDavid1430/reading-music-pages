@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emma and Music</title>
+<!--
+  Activity 2 · The Soundtrack of Your Life · Reading (A1–A2)
+  Standalone file: no backend, no external libraries.
+  Genially embed example:
+  <iframe src="https://YOUR-HOSTING/reading_2_emma.html" width="100%" height="900" style="border:0" allow="autoplay" title="Emma and Music"></iframe>
+-->
+<style>
+:root{
+  --ink:#2b2140; --purple:#5b3de8; --purple-d:#4328c4; --pink:#d6165f; --pink-l:#ff5c9a;
+  --yellow:#ffc83d; --teal:#0b7f72; --teal-l:#12a594; --orange:#ff7a59; --navy:#1d1450;
+  --bg1:#e3f6ff; --bg2:#ffe3f1; --bg3:#fff2c9; --card:#ffffff; --radius:24px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{
+  font-family:"Nunito","Quicksand","Trebuchet MS","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+  color:var(--ink); font-size:18px; line-height:1.55; min-height:100vh; overflow-x:hidden; position:relative;
+  background:linear-gradient(160deg,var(--bg1),var(--bg2) 55%,var(--bg3));
+}
+.bg-notes{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.bg-notes span{position:absolute;bottom:-60px;opacity:.26;color:var(--pink);animation:floatUp linear infinite}
+@keyframes floatUp{to{transform:translateY(-115vh) rotate(-25deg)}}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+.app{position:relative;z-index:1;max-width:1150px;margin:0 auto;padding:14px}
+
+/* Header: rock-stage look */
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;color:#fff;border-radius:var(--radius);
+  padding:14px 18px;position:relative;overflow:hidden;box-shadow:0 8px 0 rgba(29,20,80,.3);
+  background:
+    radial-gradient(ellipse at 15% 0%,rgba(255,200,61,.55),transparent 55%),
+    radial-gradient(ellipse at 85% 0%,rgba(255,92,154,.6),transparent 55%),
+    linear-gradient(180deg,#2a1b78,var(--navy))}
+.brand{display:flex;align-items:center;gap:14px;min-width:0;position:relative}
+.vinyl{flex:none;width:58px;height:58px;border-radius:50%;
+  background:radial-gradient(circle,var(--pink-l) 0 12%,#0e0a26 13% 16%,transparent 17%),
+             repeating-radial-gradient(circle,#0e0a26 0 3px,#2a2060 4px 5px);
+  box-shadow:0 0 0 3px #fff;animation:spin 5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.eyebrow{margin:0;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;font-weight:800}
+h1{margin:0;font-size:clamp(1.3rem,3.6vw,2rem);line-height:1.15}
+.eq{display:flex;align-items:flex-end;gap:3px;height:34px}
+.eq i{display:block;width:6px;background:var(--pink-l);border-radius:3px;height:30%;animation:eq 1s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:-.2s}.eq i:nth-child(3){animation-delay:-.45s}
+.eq i:nth-child(4){animation-delay:-.7s}.eq i:nth-child(5){animation-delay:-.1s}
+@keyframes eq{0%,100%{height:25%}50%{height:100%}}
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:relative}
+.chip{background:#fff;color:var(--ink);font-weight:900;border-radius:999px;padding:6px 14px;min-height:40px;display:inline-flex;align-items:center;gap:6px}
+.icon-btn{font:inherit;font-size:1.3rem;width:46px;height:46px;border-radius:50%;border:3px solid #fff;background:rgba(255,255,255,.18);color:#fff;cursor:pointer}
+.icon-btn:hover{background:rgba(255,255,255,.35)}
+
+.progress-wrap{display:flex;align-items:center;gap:12px;margin:14px 4px}
+.progress{flex:1;height:18px;background:rgba(255,255,255,.8);border:3px solid #fff;border-radius:99px;overflow:hidden}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--teal-l),var(--yellow),var(--pink-l));border-radius:99px;transition:width .6s cubic-bezier(.2,.9,.3,1.2)}
+#progLabel{font-weight:900;white-space:nowrap}
+
+.layout{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start}
+.card{background:var(--card);border:4px solid #fff;border-radius:var(--radius);padding:20px;box-shadow:0 10px 0 rgba(43,33,64,.12)}
+h2{margin:0 0 6px;font-size:1.35rem}
+.instr{margin:0 0 12px;background:#e6fbf7;border-left:6px solid var(--teal-l);padding:8px 12px;border-radius:10px;font-size:1rem}
+
+/* Character */
+.char-wrap{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.char{width:140px;height:auto;flex:none;overflow:visible}
+.char-body{transform-box:fill-box;transform-origin:center bottom;animation:bob 2.4s ease-in-out infinite}
+.char .eyes{transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}
+.char .mouth.oops{display:none}
+.char[data-mood="oops"] .mouth.happy{display:none}
+.char[data-mood="oops"] .mouth.oops{display:block}
+.char.cheer .char-body{animation:jump .55s ease 3}
+.char.shake .char-body{animation:shake .5s ease}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(1deg)}50%{transform:translateY(-6px) rotate(-1deg)}}
+@keyframes jump{0%,100%{transform:translateY(0)}45%{transform:translateY(-26px) scale(1.04)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.bubble{position:relative;background:#fff;border:3px solid var(--pink);border-radius:18px;padding:10px 14px;font-weight:900;color:#a40f48}
+.bubble::before{content:"";position:absolute;left:-14px;top:50%;margin-top:-9px;border:9px solid transparent;border-right-color:var(--pink);border-left:0}
+.bubble.pop{animation:pop .4s ease}
+@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+
+.listen-row{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 12px}
+.story-text{background:#fbf9ff;border:3px solid #e4dbff;border-radius:18px;padding:14px 16px;font-size:1.12rem}
+.story-text p{margin:0 0 .8em}.story-text p:last-child{margin:0}
+.sent{padding:2px 3px;border-radius:8px;transition:background .25s,box-shadow .25s;cursor:pointer;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.sent:hover{background:#efe9ff}
+.sent.speaking{background:#ffe27a}
+.sent.hint{background:#b9f3e8;box-shadow:0 0 0 3px var(--teal-l)}
+.note{font-size:.9rem;margin:8px 0 0;opacity:.85}
+
+.btn{font:inherit;font-weight:900;border:0;border-radius:999px;padding:11px 20px;min-height:48px;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;color:#fff;
+  box-shadow:0 5px 0 rgba(0,0,0,.2);transition:transform .15s,box-shadow .15s,filter .15s}
+.btn:hover:not([disabled]){transform:translateY(-2px);filter:brightness(1.07)}
+.btn:active:not([disabled]){transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.btn:focus-visible,.icon-btn:focus-visible{outline:4px solid var(--yellow);outline-offset:3px}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.b-main{background:var(--purple)} .b-listen{background:var(--teal)} .b-hint{background:var(--yellow);color:var(--ink)}
+.b-next{background:var(--pink)} .b-reset{background:#fff;color:var(--ink);border:3px solid var(--ink);box-shadow:0 5px 0 rgba(43,33,64,.25)}
+.b-small{padding:7px 14px;min-height:40px;font-size:.95rem}
+.btn.pulse{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.07)}}
+
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.qbadge{background:var(--purple);color:#fff;font-weight:900;border-radius:999px;padding:4px 14px}
+.instr2{margin:10px 0 6px;font-weight:800}
+.statement{background:linear-gradient(135deg,#f4f0ff,#fff0f7);border:4px solid #c9bdff;border-radius:20px;padding:18px;
+  font-size:clamp(1.25rem,3.2vw,1.6rem);font-weight:900;line-height:1.3;text-align:center;margin:6px 0 16px;animation:slideIn .4s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+
+.tf{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tf-btn{font:inherit;font-weight:900;font-size:clamp(1.3rem,3.6vw,1.8rem);color:#fff;border:0;border-radius:22px;min-height:96px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative;
+  box-shadow:0 8px 0 rgba(0,0,0,.25);transition:transform .15s,box-shadow .15s,opacity .3s}
+.tf-btn .big{font-size:2.2rem;line-height:1}
+.tf-btn small{font-size:.8rem;font-weight:800;opacity:.9}
+.tf-true{background:var(--teal)} .tf-false{background:var(--pink)}
+.tf-btn:hover:not([disabled]){transform:translateY(-4px) rotate(-1deg)}
+.tf-btn:active:not([disabled]){transform:translateY(4px);box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.tf-btn:focus-visible{outline:5px solid var(--yellow);outline-offset:3px}
+.tf-btn[disabled]{cursor:default}
+.tf-btn.dim{opacity:.4}
+.tf-btn.right{animation:pop .5s ease;box-shadow:0 0 0 6px var(--yellow),0 8px 0 rgba(0,0,0,.25)}
+.tf-btn.wrong{animation:shake .5s ease;box-shadow:0 0 0 6px #2b2140,0 8px 0 rgba(0,0,0,.25)}
+
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+.feedback{display:flex;gap:12px;align-items:flex-start;min-height:104px;border-radius:18px;padding:14px 16px;background:#f4f0ff;border:3px dashed #c9bdff;transition:background .3s,border-color .3s}
+.feedback .ico{font-size:2rem;line-height:1}
+.feedback strong{display:block;font-size:1.1rem}
+.feedback.ok{background:#e3fbf4;border:3px solid var(--teal-l);animation:pop .4s ease}
+.feedback.bad{background:#fff0f4;border:3px solid var(--pink)}
+.feedback.info{background:#fff8dc;border:3px solid #e0a800}
+.dots{list-style:none;display:flex;gap:8px;padding:0;margin:16px 0 0;flex-wrap:wrap}
+.dot{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:900;background:#eee8ff;border:3px solid #c9bdff;transition:all .3s}
+.dot.current{background:var(--yellow);border-color:var(--ink);transform:scale(1.12)}
+.dot.done{background:var(--teal-l);border-color:var(--teal);color:#fff}
+.dot.miss{background:#ffd3e1;border-color:var(--pink)}
+
+.review{margin-top:14px;background:#f7f4ff;border:3px solid #c9bdff;border-radius:18px;padding:12px 14px}
+.review h3{margin:0 0 8px;font-size:1.05rem}
+.review ul{list-style:none;margin:0;padding:0}
+.review li{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px dashed #cfc5ff;font-size:.98rem}
+.review li:last-child{border:0}
+.review .st{flex:none;font-weight:900;min-width:92px}
+
+.result{text-align:center}
+.trophy{font-size:4.5rem;animation:jump .8s ease 3}
+.big-stars{font-size:2rem;margin:4px 0}
+.rank{display:inline-block;background:var(--yellow);font-weight:900;border-radius:999px;padding:6px 18px;margin:6px 0 12px}
+.summary{list-style:none;padding:0;margin:12px 0;text-align:left}
+.summary li{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-radius:12px;background:#f7f4ff;margin-bottom:6px;font-size:1rem}
+footer{text-align:center;font-size:.9rem;margin:18px 0 6px;opacity:.85}
+
+@media (max-width:900px){ .layout{grid-template-columns:1fr} .eq{display:none} }
+@media (max-width:520px){
+  body{font-size:17px} .card{padding:14px} .char{width:104px} .btn{padding:10px 14px} .top{padding:12px}
+  .tf{gap:10px} .tf-btn{min-height:84px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<div class="bg-notes" id="bgNotes" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="vinyl" aria-hidden="true"></div>
+      <div>
+        <p class="eyebrow">The Soundtrack of Your Life · Reading</p>
+        <h1>Emma and Music</h1>
+      </div>
+      <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="stats">
+      <div class="chip" title="Stars"><span aria-hidden="true">⭐</span><span id="starCount">0</span><span class="sr">stars</span></div>
+      <div class="chip" title="Points"><span aria-hidden="true">🎸</span><span id="pointCount">0</span> pts</div>
+      <button class="icon-btn" id="soundBtn" type="button" aria-pressed="false" aria-label="Sound effects: on. Press to mute.">🔊</button>
+    </div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" aria-label="Activity progress"><div class="bar" id="bar"></div></div>
+    <span id="progLabel">Question 1 of 6</span>
+  </div>
+
+  <main class="layout">
+    <!-- STORY -->
+    <section class="card" aria-labelledby="storyTitle">
+      <div class="char-wrap">
+        <svg class="char" id="char" data-mood="happy" viewBox="0 0 220 235" role="img" aria-label="Emma, a smiling girl with a ponytail and headphones">
+          <g class="char-body">
+            <path d="M54 235 C54 178 82 160 110 160 C138 160 166 178 166 235Z" fill="#12a594"/>
+            <path d="M94 160 Q110 176 126 160" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="110" cy="204" r="14" fill="#ff5c9a"/><text x="110" y="210" text-anchor="middle" font-size="18" font-weight="900" fill="#fff">♫</text>
+            <rect x="99" y="138" width="22" height="30" rx="9" fill="#cf8a5a"/>
+            <circle cx="172" cy="70" r="18" fill="#7a3417"/>
+            <path d="M150 60 Q170 50 178 76 Q168 66 154 74Z" fill="#7a3417"/>
+            <ellipse cx="110" cy="96" rx="52" ry="56" fill="#e7a672"/>
+            <path d="M58 94 C50 38 88 24 110 26 C136 24 170 40 162 94 C150 66 132 58 110 60 C86 60 66 70 58 94Z" fill="#7a3417"/>
+            <path d="M56 98 C50 12 170 12 164 98" fill="none" stroke="#ff3d81" stroke-width="10" stroke-linecap="round"/>
+            <rect x="43" y="84" width="24" height="44" rx="11" fill="#5b3de8"/>
+            <rect x="153" y="84" width="24" height="44" rx="11" fill="#5b3de8"/>
+            <g class="eyes"><ellipse cx="90" cy="102" rx="7" ry="9" fill="#2b2140"/><ellipse cx="130" cy="102" rx="7" ry="9" fill="#2b2140"/>
+              <circle cx="93" cy="98" r="2.6" fill="#fff"/><circle cx="133" cy="98" r="2.6" fill="#fff"/></g>
+            <circle cx="78" cy="122" r="8" fill="#ff7a8f" opacity=".55"/><circle cx="142" cy="122" r="8" fill="#ff7a8f" opacity=".55"/>
+            <path class="mouth happy" d="M92 124 Q110 148 128 124 Z" fill="#7a1f3d"/>
+            <path class="mouth oops" d="M96 136 Q110 122 124 136" fill="none" stroke="#7a1f3d" stroke-width="5" stroke-linecap="round"/>
+          </g>
+        </svg>
+        <div class="bubble" id="bubble" aria-hidden="true">Hi! I'm Emma! 🎸</div>
+      </div>
+
+      <h2 id="storyTitle">Read Emma's story</h2>
+      <p class="instr"><strong>How to play:</strong> 1) Read or listen to the story. 2) Choose <b>True</b> or <b>False</b>. 3) Read the explanation. Need help? Press “Hint”!</p>
+
+      <div class="listen-row" id="listenRow">
+        <button class="btn b-listen" id="listenBtn" type="button"><span aria-hidden="true">🔊</span> <span id="listenLabel">Listen to the story</span></button>
+        <button class="btn b-reset b-small" id="slowBtn" type="button" aria-pressed="false"><span aria-hidden="true">🐢</span> Slow voice: off</button>
+      </div>
+      <article class="story-text" id="storyText" lang="en"></article>
+      <p class="note" id="ttsNote">Tip: tap any sentence to hear it.</p>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="card" aria-labelledby="qTitle">
+      <div id="quizView">
+        <div class="qhead">
+          <span class="qbadge" id="qBadge">Question 1</span>
+          <button class="btn b-listen b-small" id="listenQ" type="button"><span aria-hidden="true">🔊</span> Listen to the sentence</button>
+        </div>
+        <p class="instr2" id="qTitle">True or False?</p>
+        <div class="statement" id="statement" lang="en"></div>
+
+        <div class="tf" role="group" aria-label="Choose your answer">
+          <button class="tf-btn tf-true" id="btnTrue" type="button"><span class="big" aria-hidden="true">✔</span>True<small>(press T)</small></button>
+          <button class="tf-btn tf-false" id="btnFalse" type="button"><span class="big" aria-hidden="true">✘</span>False<small>(press F)</small></button>
+        </div>
+
+        <div class="actions">
+          <button class="btn b-hint" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span id="hintLabel">Hint (2 left)</span></button>
+          <button class="btn b-main" id="reviewBtn" type="button" aria-expanded="false" aria-controls="review"><span aria-hidden="true">📋</span> Check my answers</button>
+          <button class="btn b-next" id="nextBtn" type="button" hidden>Next <span aria-hidden="true">➜</span></button>
+          <button class="btn b-reset" id="restartBtn" type="button"><span aria-hidden="true">↺</span> Restart</button>
+        </div>
+
+        <div class="feedback" id="fb" role="status" aria-live="polite">
+          <span class="ico" id="fbIcon" aria-hidden="true">🎵</span>
+          <div><strong id="fbTitle">Ready?</strong><span id="fbBody">Read the story, then choose True or False.</span></div>
+        </div>
+        <div class="review" id="review" hidden>
+          <h3>My answers</h3>
+          <ul id="reviewList"></ul>
+        </div>
+        <ol class="dots" id="dots" aria-label="Questions"></ol>
+      </div>
+
+      <div class="result" id="result" hidden>
+        <div class="trophy" aria-hidden="true">🏆</div>
+        <h2>Great concert!</h2>
+        <div class="big-stars" id="resStars" aria-hidden="true"></div>
+        <div class="rank" id="resRank"></div>
+        <p id="resText"></p>
+        <ul class="summary" id="resList"></ul>
+        <div class="actions" style="justify-content:center">
+          <button class="btn b-main" id="againBtn" type="button"><span aria-hidden="true">↺</span> Play again</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>The Soundtrack of Your Life · Reading 2 · Level A1–A2</footer>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = s => document.querySelector(s);
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const rnd = a => a[Math.floor(Math.random() * a.length)];
+
+/* ---------- Reading text (exact) ---------- */
+const STORY = [
+  [ {id:"e1",t:"Emma loves music."},
+    {id:"e2",t:"She listens to music every day after school."},
+    {id:"e3",t:"Her favorite musical genre is rock, and her favorite band is Imagine Dragons."},
+    {id:"e4",t:"She likes their songs because they are energetic."} ],
+  [ {id:"e5",t:"Emma sometimes listens to pop music with her sister."},
+    {id:"e6",t:"Her sister prefers pop and loves dancing."},
+    {id:"e7",t:"On weekends, they listen to music together at home."},
+    {id:"e8",t:"Emma does not play an instrument, but she wants to learn to play the guitar."} ],
+  [ {id:"e9",t:"Music is very important to Emma because it helps her feel happy and relaxed."} ]
+];
+const ALL = STORY.flat();
+
+/* ---------- Statements ---------- */
+const Q = [
+  { text:"Emma listens to music every day.", answer:true, sent:["e2"], clue:"Look for the words “every day”.",
+    why:"The text says Emma listens to music every day after school." },
+  { text:"Emma's favorite musical genre is pop.", answer:false, sent:["e3"], clue:"Look for “favorite musical genre”.",
+    why:"Her favorite genre is rock, not pop. She only listens to pop sometimes with her sister." },
+  { text:"Her favorite band is Imagine Dragons.", answer:true, sent:["e3"], clue:"Look for “favorite band”.",
+    why:"The text says her favorite band is Imagine Dragons." },
+  { text:"Emma's sister likes dancing.", answer:true, sent:["e6"], clue:"Find the sentence about her sister.",
+    why:"Her sister prefers pop and loves dancing." },
+  { text:"Emma plays the guitar every weekend.", answer:false, sent:["e8"], clue:"Look for “play an instrument” and “guitar”.",
+    why:"Emma does not play an instrument. She wants to learn to play the guitar." },
+  { text:"Music makes Emma feel happy and relaxed.", answer:true, sent:["e9"], clue:"Read the last sentence of the story.",
+    why:"Music helps her feel happy and relaxed." }
+];
+
+/* ---------- Sound effects ---------- */
+let audioCtx=null, muted=false;
+function tone(freq,start,dur,type,vol){
+  if(muted) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended") audioCtx.resume();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain(), t0=audioCtx.currentTime+start;
+    o.type=type||"triangle"; o.frequency.value=freq;
+    g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(vol||.15,t0+.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    o.connect(g); g.connect(audioCtx.destination); o.start(t0); o.stop(t0+dur+.05);
+  }catch(e){}
+}
+const sfx = {
+  good(){[392,523.25,659.25,783.99].forEach((f,i)=>tone(f,i*.09,.3,"sawtooth",.07));},
+  bad(){tone(247,0,.2,"sine",.12); tone(196,.17,.3,"sine",.12);},
+  hint(){tone(880,0,.15,"sine",.1); tone(1174,.1,.2,"sine",.1);},
+  win(){[392,523,659,784,659,784,1047,1319].forEach((f,i)=>tone(f,i*.12,.32,"sawtooth",.08));}
+};
+
+/* ---------- Read aloud (Web Speech API) ---------- */
+const synth = ("speechSynthesis" in window) ? window.speechSynthesis : null;
+let voices=[], slow=false, token=0, speaking=false;
+function loadVoices(){ if(synth) voices=synth.getVoices(); }
+if(synth){ loadVoices(); synth.onvoiceschanged=loadVoices; }
+function pickVoice(){ return voices.find(v=>/^en[-_]US/i.test(v.lang)) || voices.find(v=>/^en/i.test(v.lang)) || null; }
+function clearSpeaking(){ document.querySelectorAll(".sent.speaking").forEach(e=>e.classList.remove("speaking")); }
+function setListenUI(on){ speaking=on; $("#listenLabel").textContent = on ? "Stop" : "Listen to the story"; }
+function stopSpeaking(){ token++; if(synth) synth.cancel(); clearSpeaking(); setListenUI(false); }
+function speakList(items,fromStory){
+  if(!synth) return;
+  token++; const my=token; synth.cancel(); clearSpeaking(); setListenUI(!!fromStory);
+  let i=0;
+  const next=()=>{
+    if(my!==token) return;
+    if(i>=items.length){ clearSpeaking(); if(fromStory) setListenUI(false); return; }
+    const it=items[i++];
+    const u=new SpeechSynthesisUtterance(it.text);
+    u.lang="en-US"; const v=pickVoice(); if(v) u.voice=v;
+    u.rate = slow ? .65 : .88; u.pitch=1.05;
+    u.onstart=()=>{ if(my!==token) return; clearSpeaking(); if(it.el) it.el.classList.add("speaking"); };
+    u.onend=()=>{ if(it.el) it.el.classList.remove("speaking"); next(); };
+    u.onerror=()=>{ if(my===token){ clearSpeaking(); setListenUI(false);} };
+    synth.speak(u);
+  };
+  setTimeout(next,80);
+}
+
+/* ---------- Confetti & floating notes ---------- */
+const cv=$("#confetti"), cx=cv.getContext("2d"); let parts=[], raf=null, W=0, H=0;
+function resize(){
+  const d=window.devicePixelRatio||1; W=window.innerWidth; H=window.innerHeight;
+  cv.width=W*d; cv.height=H*d; cx.setTransform(d,0,0,d,0,0);
+}
+window.addEventListener("resize",resize); resize();
+const COLORS=["#ff3d81","#5b3de8","#ffc83d","#12a594","#ff7a59","#4aa8ff"], GLYPHS=["♪","♫","★","●","■","♬","🎸"];
+function burst(n,x,y){
+  if(reduced) return;
+  x = x ?? W/2; y = y ?? H/3;
+  for(let i=0;i<n;i++) parts.push({x,y,vx:(Math.random()-.5)*12,vy:-Math.random()*11-3,g:.28,r:Math.random()*6,vr:(Math.random()-.5)*.3,
+    s:14+Math.random()*16,c:rnd(COLORS),ch:rnd(GLYPHS),life:0});
+  if(!raf) raf=requestAnimationFrame(loop);
+}
+function loop(){
+  cx.clearRect(0,0,W,H);
+  parts=parts.filter(p=>p.y<H+40 && p.life<200);
+  for(const p of parts){
+    p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.vx*=.99; p.r+=p.vr; p.life++;
+    cx.save(); cx.translate(p.x,p.y); cx.rotate(p.r); cx.fillStyle=p.c; cx.font="900 "+p.s+"px sans-serif";
+    cx.textAlign="center"; cx.textBaseline="middle"; cx.fillText(p.ch,0,0); cx.restore();
+  }
+  raf = parts.length ? requestAnimationFrame(loop) : (cx.clearRect(0,0,W,H),null);
+}
+(function floatingNotes(){
+  if(reduced) return; const box=$("#bgNotes");
+  for(let i=0;i<14;i++){
+    const s=document.createElement("span");
+    s.textContent=rnd(["♪","♫","♬","♩"]); s.style.left=(Math.random()*100)+"%";
+    s.style.fontSize=(22+Math.random()*34)+"px"; s.style.animationDuration=(14+Math.random()*16)+"s";
+    s.style.animationDelay=(-Math.random()*20)+"s"; box.appendChild(s);
+  }
+})();
+
+/* ---------- Game state ---------- */
+const PRAISE=["Awesome!","You rock!","Perfect pitch!","Great job!","Bravo!","Superstar!","Rock on!"];
+let idx=0, cur=null, results=[], totalStars=0, totalPoints=0;
+
+const el = {
+  story:$("#storyText"), char:$("#char"), bubble:$("#bubble"), statement:$("#statement"), qBadge:$("#qBadge"),
+  bT:$("#btnTrue"), bF:$("#btnFalse"), hint:$("#hintBtn"), hintLabel:$("#hintLabel"), next:$("#nextBtn"),
+  fb:$("#fb"), fbIcon:$("#fbIcon"), fbTitle:$("#fbTitle"), fbBody:$("#fbBody"), dots:$("#dots"),
+  bar:$("#bar"), prog:$("#progress"), progLabel:$("#progLabel"), stars:$("#starCount"), points:$("#pointCount"),
+  review:$("#review"), reviewBtn:$("#reviewBtn"), reviewList:$("#reviewList")
+};
+
+function renderStory(){
+  el.story.innerHTML="";
+  STORY.forEach(par=>{
+    const p=document.createElement("p");
+    par.forEach(s=>{
+      const sp=document.createElement("span"); sp.className="sent"; sp.id=s.id; sp.textContent=s.t; sp.title="Tap to listen";
+      sp.addEventListener("click",()=>speakList([{text:s.t,el:sp}],false));
+      p.appendChild(sp); p.appendChild(document.createTextNode(" "));
+    });
+    el.story.appendChild(p);
+  });
+}
+function say(text){ el.bubble.textContent=text; el.bubble.classList.remove("pop"); void el.bubble.offsetWidth; el.bubble.classList.add("pop"); }
+function mood(kind){
+  el.char.classList.remove("cheer","shake"); void el.char.getBoundingClientRect();
+  if(kind==="cheer"){ el.char.dataset.mood="happy"; el.char.classList.add("cheer"); }
+  else if(kind==="oops"){ el.char.dataset.mood="oops"; el.char.classList.add("shake"); }
+  else el.char.dataset.mood="happy";
+}
+function feedback(kind,title,body){
+  el.fb.className="feedback "+kind;
+  el.fbIcon.textContent=({ok:"🎉",bad:"🎧",info:"💡"})[kind]||"🎵";
+  el.fbTitle.textContent=title; el.fbBody.textContent=body||"";
+}
+function clearHints(){ document.querySelectorAll(".sent.hint").forEach(e=>e.classList.remove("hint")); }
+function showSupport(q){
+  clearHints();
+  q.sent.forEach(id=>{ const s=document.getElementById(id); if(s){ s.classList.add("hint"); s.scrollIntoView({behavior:reduced?"auto":"smooth",block:"nearest"}); } });
+}
+function updateHeader(){ el.stars.textContent=totalStars; el.points.textContent=totalPoints; }
+function updateProgress(){
+  const done=results.filter(Boolean).length;
+  el.bar.style.width=(done/Q.length*100)+"%"; el.prog.setAttribute("aria-valuenow",done);
+  el.progLabel.textContent = done>=Q.length ? "All done!" : "Question "+(idx+1)+" of "+Q.length;
+}
+function buildDots(){
+  el.dots.innerHTML="";
+  Q.forEach((_,i)=>{
+    const li=document.createElement("li"); li.className="dot"; li.textContent=i+1;
+    const r=results[i];
+    if(r){ li.classList.add(r.stars>0?"done":"miss"); li.textContent=r.stars>0?"★":"•"; li.setAttribute("aria-label","Question "+(i+1)+": "+r.stars+" stars"); }
+    else if(i===idx){ li.classList.add("current"); li.setAttribute("aria-current","step"); }
+    el.dots.appendChild(li);
+  });
+}
+function buildReview(){
+  el.reviewList.innerHTML="";
+  Q.forEach((q,i)=>{
+    const li=document.createElement("li"), st=document.createElement("span"), tx=document.createElement("span");
+    st.className="st"; const r=results[i];
+    st.textContent = !r ? "⏳ Not yet" : (r.correct ? "✔ Correct" : "✘ Try again later");
+    tx.textContent=(i+1)+". "+q.text; li.append(st,tx); el.reviewList.appendChild(li);
+  });
+}
+function startQuestion(){
+  cur={hints:0,done:false};
+  const q=Q[idx];
+  el.qBadge.textContent="Question "+(idx+1)+" of "+Q.length;
+  el.statement.textContent=q.text;
+  el.statement.style.animation="none"; void el.statement.offsetWidth; el.statement.style.animation="";
+  [el.bT,el.bF].forEach(b=>{ b.disabled=false; b.className=b.className.replace(/\b(right|wrong|dim)\b/g,"").trim(); });
+  el.hint.disabled=false; el.hintLabel.textContent="Hint (2 left)";
+  el.next.hidden=true; el.next.classList.remove("pulse");
+  clearHints(); mood("idle");
+  feedback("info","Your turn!","Is this sentence True or False? Read the story and choose.");
+  say(rnd(["True or False?","Think about my story!","You can do it!"]));
+  updateProgress(); buildDots(); buildReview();
+}
+function answer(val){
+  if(!cur || cur.done) return;
+  cur.done=true;
+  const q=Q[idx], correct=(val===q.answer);
+  const stars = correct ? (cur.hints>0?2:3) : 0;
+  results[idx]={stars,correct};
+  totalStars+=stars; totalPoints+=stars*10;
+  const chosen = val ? el.bT : el.bF, other = val ? el.bF : el.bT;
+  chosen.classList.add(correct?"right":"wrong");
+  if(!correct){ other.classList.add("right"); } else { other.classList.add("dim"); }
+  el.bT.disabled=true; el.bF.disabled=true; el.hint.disabled=true;
+  showSupport(q);
+  const label=q.answer?"True":"False";
+  if(correct){
+    feedback("ok",rnd(PRAISE)+" "+"⭐".repeat(stars),"It is "+label+". "+q.why);
+    sfx.good(); mood("cheer"); say(rnd(PRAISE));
+    const r=chosen.getBoundingClientRect(); burst(36,r.left+r.width/2,r.top);
+  }else{
+    feedback("bad","Oops! The answer is "+label+".",q.why);
+    sfx.bad(); mood("oops"); say("Now you know!");
+  }
+  el.next.hidden=false; el.next.classList.add("pulse");
+  el.next.innerHTML = (idx===Q.length-1 ? "See my results 🏆" : "Next ➜");
+  updateHeader(); updateProgress(); buildDots(); buildReview();
+  el.next.focus({preventScroll:true});
+}
+function onHint(){
+  if(!cur || cur.done) return;
+  if(cur.hints>=2) return;
+  cur.hints++; sfx.hint();
+  if(cur.hints===1){
+    showSupport(Q[idx]);
+    feedback("info","Hint 1","Read the green sentence in the story. It helps you decide!");
+  }else{
+    feedback("info","Hint 2",Q[idx].clue);
+  }
+  el.hintLabel.textContent="Hint ("+(2-cur.hints)+" left)";
+  if(cur.hints>=2) el.hint.disabled=true;
+}
+function onNext(){
+  stopSpeaking();
+  if(idx>=Q.length-1){ showResults(); return; }
+  idx++; startQuestion();
+}
+function showResults(){
+  $("#quizView").hidden=true; $("#result").hidden=false; updateProgress();
+  const max=Q.length*3;
+  const rank = totalStars>=16 ? ["Platinum Superstar 🏆","Amazing! You understood Emma's story perfectly!"]
+             : totalStars>=12 ? ["Gold Record 🥇","Great job! You are a good reader."]
+             : totalStars>=7  ? ["Silver Record 🥈","Good work! Read the story again to get more stars."]
+             : ["Rising Star 🌟","Nice try! Listen to the story and play again."];
+  $("#resStars").textContent=totalStars+" / "+max+" ⭐";
+  $("#resRank").textContent=rank[0];
+  $("#resText").textContent=rank[1]+" You have "+totalPoints+" points.";
+  const ul=$("#resList"); ul.innerHTML="";
+  Q.forEach((q,i)=>{
+    const li=document.createElement("li"), a=document.createElement("span"), b=document.createElement("span");
+    a.textContent=(i+1)+". "+q.text+" ("+(q.answer?"True":"False")+")";
+    b.textContent=results[i].stars>0?"⭐".repeat(results[i].stars):"—"; b.setAttribute("aria-label",results[i].stars+" stars");
+    li.append(a,b); ul.appendChild(li);
+  });
+  sfx.win(); mood("cheer"); say("What a show!");
+  burst(110); setTimeout(()=>burst(80,W*.2,H*.4),400); setTimeout(()=>burst(80,W*.8,H*.4),700);
+  $("#againBtn").focus({preventScroll:true});
+}
+function restart(){
+  stopSpeaking(); clearHints();
+  idx=0; results=[]; totalStars=0; totalPoints=0;
+  $("#result").hidden=true; $("#quizView").hidden=false;
+  el.review.hidden=true; el.reviewBtn.setAttribute("aria-expanded","false");
+  updateHeader(); startQuestion(); say("Let's play again!");
+  window.scrollTo({top:0,behavior:reduced?"auto":"smooth"});
+}
+
+/* ---------- Events ---------- */
+el.bT.addEventListener("click",()=>answer(true));
+el.bF.addEventListener("click",()=>answer(false));
+el.hint.addEventListener("click",onHint);
+el.next.addEventListener("click",onNext);
+$("#restartBtn").addEventListener("click",restart);
+$("#againBtn").addEventListener("click",restart);
+el.reviewBtn.addEventListener("click",()=>{
+  buildReview(); const open=el.review.hidden; el.review.hidden=!open; el.reviewBtn.setAttribute("aria-expanded",String(open));
+});
+document.addEventListener("keydown",e=>{
+  if(e.ctrlKey||e.metaKey||e.altKey) return;
+  if($("#quizView").hidden) return;
+  const k=e.key.toLowerCase();
+  if(k==="t") answer(true); else if(k==="f") answer(false);
+});
+$("#soundBtn").addEventListener("click",e=>{
+  muted=!muted; const b=e.currentTarget; b.textContent=muted?"🔇":"🔊"; b.setAttribute("aria-pressed",String(muted));
+  b.setAttribute("aria-label",muted?"Sound effects: off. Press to turn on.":"Sound effects: on. Press to mute.");
+});
+if(synth){
+  $("#listenBtn").addEventListener("click",()=>{
+    if(speaking){ stopSpeaking(); return; }
+    speakList(ALL.map(s=>({text:s.t,el:document.getElementById(s.id)})),true);
+  });
+  $("#listenQ").addEventListener("click",()=>{ stopSpeaking(); speakList([{text:Q[idx].text}],false); });
+  $("#slowBtn").addEventListener("click",e=>{
+    slow=!slow; const b=e.currentTarget; b.setAttribute("aria-pressed",String(slow));
+    b.innerHTML='<span aria-hidden="true">'+(slow?"🐢":"🐇")+'</span> Slow voice: '+(slow?"on":"off");
+  });
+  window.addEventListener("pagehide",stopSpeaking);
+}else{
+  $("#listenRow").hidden=true; $("#listenQ").hidden=true;
+  $("#ttsNote").textContent="Your browser cannot read aloud. Please read the text carefully.";
+}
+
+/* ---------- Start ---------- */
+renderStory(); updateHeader(); startQuestion();
+})();
+</script>
+</body>
+</html>

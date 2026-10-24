@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Favorite Music — Daniel</title>
+<!--
+  Activity 1 · The Soundtrack of Your Life · Reading (A1–A2)
+  Standalone file: no backend, no external libraries.
+  Genially embed example:
+  <iframe src="https://YOUR-HOSTING/reading_1_daniel.html" width="100%" height="900" style="border:0" allow="autoplay" title="My Favorite Music — Daniel"></iframe>
+-->
+<style>
+:root{
+  --ink:#2b2140; --purple:#5b3de8; --purple-d:#4328c4; --pink:#d6165f; --pink-l:#ff5c9a;
+  --yellow:#ffc83d; --teal:#0b7f72; --teal-l:#12a594; --orange:#ff7a59;
+  --bg1:#fff3d6; --bg2:#ffd9ec; --bg3:#d9ecff; --card:#ffffff; --radius:24px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{
+  font-family:"Nunito","Quicksand","Trebuchet MS","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+  color:var(--ink); font-size:18px; line-height:1.55; min-height:100vh; overflow-x:hidden; position:relative;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2) 50%,var(--bg3));
+}
+.bg-notes{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.bg-notes span{position:absolute;bottom:-60px;opacity:.28;color:var(--purple);animation:floatUp linear infinite}
+@keyframes floatUp{to{transform:translateY(-115vh) rotate(25deg)}}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+
+.app{position:relative;z-index:1;max-width:1150px;margin:0 auto;padding:14px}
+
+/* Header */
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+  background:linear-gradient(100deg,var(--purple),var(--pink));color:#fff;border-radius:var(--radius);
+  padding:14px 18px;box-shadow:0 8px 0 rgba(67,40,196,.25)}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.vinyl{flex:none;width:58px;height:58px;border-radius:50%;
+  background:radial-gradient(circle,var(--yellow) 0 12%,#1b1230 13% 16%,transparent 17%),
+             repeating-radial-gradient(circle,#1b1230 0 3px,#33275c 4px 5px);
+  box-shadow:0 0 0 3px #fff;animation:spin 5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.eyebrow{margin:0;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;font-weight:800;opacity:.95}
+h1{margin:0;font-size:clamp(1.3rem,3.6vw,2rem);line-height:1.15}
+.eq{display:flex;align-items:flex-end;gap:3px;height:34px}
+.eq i{display:block;width:6px;background:var(--yellow);border-radius:3px;height:30%;animation:eq 1s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:-.2s}.eq i:nth-child(3){animation-delay:-.45s}
+.eq i:nth-child(4){animation-delay:-.7s}.eq i:nth-child(5){animation-delay:-.1s}
+@keyframes eq{0%,100%{height:25%}50%{height:100%}}
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.chip{background:#fff;color:var(--ink);font-weight:900;border-radius:999px;padding:6px 14px;min-height:40px;display:inline-flex;align-items:center;gap:6px}
+.icon-btn{font:inherit;font-size:1.3rem;width:46px;height:46px;border-radius:50%;border:3px solid #fff;background:rgba(255,255,255,.2);color:#fff;cursor:pointer}
+.icon-btn:hover{background:rgba(255,255,255,.35)}
+
+/* Progress */
+.progress-wrap{display:flex;align-items:center;gap:12px;margin:14px 4px}
+.progress{flex:1;height:18px;background:rgba(255,255,255,.75);border:3px solid #fff;border-radius:99px;overflow:hidden}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--yellow),var(--pink-l));border-radius:99px;transition:width .6s cubic-bezier(.2,.9,.3,1.2)}
+#progLabel{font-weight:900;white-space:nowrap}
+
+/* Layout & cards */
+.layout{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start}
+.card{background:var(--card);border:4px solid #fff;border-radius:var(--radius);padding:20px;box-shadow:0 10px 0 rgba(43,33,64,.12)}
+h2{margin:0 0 6px;font-size:1.35rem}
+.instr{margin:0 0 12px;background:#fff8dc;border-left:6px solid var(--yellow);padding:8px 12px;border-radius:10px;font-size:1rem}
+
+/* Character */
+.char-wrap{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.char{width:140px;height:auto;flex:none;overflow:visible}
+.char-body{transform-box:fill-box;transform-origin:center bottom;animation:bob 2.4s ease-in-out infinite}
+.char .eyes{transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}
+.char .mouth.oops{display:none}
+.char[data-mood="oops"] .mouth.happy{display:none}
+.char[data-mood="oops"] .mouth.oops{display:block}
+.char.cheer .char-body{animation:jump .55s ease 3}
+.char.shake .char-body{animation:shake .5s ease}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-6px) rotate(1deg)}}
+@keyframes jump{0%,100%{transform:translateY(0)}45%{transform:translateY(-26px) scale(1.04)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.bubble{position:relative;background:#fff;border:3px solid var(--purple);border-radius:18px;padding:10px 14px;font-weight:900;color:var(--purple-d)}
+.bubble::before{content:"";position:absolute;left:-14px;top:50%;margin-top:-9px;border:9px solid transparent;border-right-color:var(--purple);border-left:0}
+.bubble.pop{animation:pop .4s ease}
+@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+
+/* Story */
+.listen-row{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 12px}
+.story-text{background:#fbf9ff;border:3px solid #e4dbff;border-radius:18px;padding:14px 16px;font-size:1.12rem}
+.story-text p{margin:0 0 .8em}.story-text p:last-child{margin:0}
+.sent{padding:2px 3px;border-radius:8px;transition:background .25s,box-shadow .25s;cursor:pointer;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.sent:hover{background:#efe9ff}
+.sent.speaking{background:#ffe27a}
+.sent.hint{background:#b9f3e8;box-shadow:0 0 0 3px var(--teal-l)}
+.note{font-size:.9rem;margin:8px 0 0;opacity:.85}
+
+/* Buttons */
+.btn{font:inherit;font-weight:900;border:0;border-radius:999px;padding:11px 20px;min-height:48px;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;color:#fff;
+  box-shadow:0 5px 0 rgba(0,0,0,.2);transition:transform .15s,box-shadow .15s,filter .15s}
+.btn:hover:not([disabled]){transform:translateY(-2px);filter:brightness(1.07)}
+.btn:active:not([disabled]){transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.btn:focus-visible,.icon-btn:focus-visible,input:focus-visible{outline:4px solid var(--yellow);outline-offset:3px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.b-main{background:var(--purple)} .b-listen{background:var(--teal)} .b-hint{background:var(--yellow);color:var(--ink)}
+.b-next{background:var(--pink)} .b-reset{background:#fff;color:var(--ink);border:3px solid var(--ink);box-shadow:0 5px 0 rgba(43,33,64,.25)}
+.b-small{padding:7px 14px;min-height:40px;font-size:.95rem}
+.btn.pulse{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.07)}}
+
+/* Quiz */
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.qbadge{background:var(--purple);color:#fff;font-weight:900;border-radius:999px;padding:4px 14px}
+#qTitle{font-size:1.4rem;margin:10px 0 12px;line-height:1.3}
+label{display:block;font-weight:800;margin-bottom:6px}
+input[type=text]{width:100%;font:inherit;font-size:1.15rem;padding:12px 16px;border-radius:16px;border:3px solid #b7a8ff;color:var(--ink);background:#fff;min-height:54px}
+input[type=text]:disabled{background:#f1f1f1}
+input.good{border-color:var(--teal-l);background:#e9fbf6}
+input.bad{border-color:var(--pink)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.feedback{display:flex;gap:12px;align-items:flex-start;min-height:92px;border-radius:18px;padding:14px 16px;background:#f4f0ff;border:3px dashed #c9bdff;transition:background .3s,border-color .3s}
+.feedback .ico{font-size:2rem;line-height:1}
+.feedback strong{display:block;font-size:1.1rem}
+.feedback.ok{background:#e3fbf4;border:3px solid var(--teal-l);animation:pop .4s ease}
+.feedback.bad{background:#fff0f4;border:3px solid var(--pink)}
+.feedback.info,.feedback.part{background:#fff8dc;border:3px solid #e0a800}
+.dots{list-style:none;display:flex;gap:8px;padding:0;margin:16px 0 0;flex-wrap:wrap}
+.dot{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:900;background:#eee8ff;border:3px solid #c9bdff;transition:all .3s}
+.dot.current{background:var(--yellow);border-color:var(--ink);transform:scale(1.12)}
+.dot.done{background:var(--teal-l);border-color:var(--teal);color:#fff}
+.dot.miss{background:#ffd3e1;border-color:var(--pink)}
+
+/* Results */
+.result{text-align:center}
+.trophy{font-size:4.5rem;animation:jump .8s ease 3}
+.big-stars{font-size:2rem;letter-spacing:4px;margin:4px 0}
+.rank{display:inline-block;background:var(--yellow);font-weight:900;border-radius:999px;padding:6px 18px;margin:6px 0 12px}
+.summary{list-style:none;padding:0;margin:12px 0;text-align:left}
+.summary li{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-radius:12px;background:#f7f4ff;margin-bottom:6px;font-size:1rem}
+
+footer{text-align:center;font-size:.9rem;margin:18px 0 6px;opacity:.85}
+
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .eq{display:none}
+}
+@media (max-width:520px){
+  body{font-size:17px}
+  .card{padding:14px}
+  .char{width:104px}
+  .btn{padding:10px 14px}
+  .actions .btn{flex:1 1 45%}
+  .top{padding:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<div class="bg-notes" id="bgNotes" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="vinyl" aria-hidden="true"></div>
+      <div>
+        <p class="eyebrow">The Soundtrack of Your Life · Reading</p>
+        <h1>My Favorite Music — Daniel</h1>
+      </div>
+      <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="stats">
+      <div class="chip" title="Stars"><span aria-hidden="true">⭐</span><span id="starCount">0</span><span class="sr">stars</span></div>
+      <div class="chip" title="Points"><span aria-hidden="true">🎵</span><span id="pointCount">0</span> pts</div>
+      <button class="icon-btn" id="soundBtn" type="button" aria-pressed="false" aria-label="Sound effects: on. Press to mute.">🔊</button>
+    </div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" aria-label="Activity progress"><div class="bar" id="bar"></div></div>
+    <span id="progLabel">Question 1 of 6</span>
+  </div>
+
+  <main class="layout">
+    <!-- STORY -->
+    <section class="card" aria-labelledby="storyTitle">
+      <div class="char-wrap">
+        <svg class="char" id="char" data-mood="happy" viewBox="0 0 200 235" role="img" aria-label="Daniel, a smiling boy with big headphones">
+          <g class="char-body">
+            <path d="M44 235 C44 178 72 160 100 160 C128 160 156 178 156 235Z" fill="#ff7a59"/>
+            <path d="M84 160 Q100 178 116 160" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="100" cy="203" r="14" fill="#ffc83d"/><text x="100" y="209" text-anchor="middle" font-size="18" font-weight="900" fill="#2b2140">♪</text>
+            <rect x="89" y="138" width="22" height="30" rx="9" fill="#e0a06b"/>
+            <ellipse cx="100" cy="96" rx="52" ry="56" fill="#f4b983"/>
+            <path d="M48 92 C42 40 78 26 100 28 C126 26 160 42 152 92 C142 70 126 62 100 62 C74 62 58 72 48 92Z" fill="#3b2a20"/>
+            <path d="M46 96 C40 14 160 14 154 96" fill="none" stroke="#5b3de8" stroke-width="10" stroke-linecap="round"/>
+            <rect x="33" y="82" width="24" height="44" rx="11" fill="#ff3d81"/>
+            <rect x="143" y="82" width="24" height="44" rx="11" fill="#ff3d81"/>
+            <g class="eyes"><ellipse cx="80" cy="100" rx="7" ry="9" fill="#2b2140"/><ellipse cx="120" cy="100" rx="7" ry="9" fill="#2b2140"/>
+              <circle cx="83" cy="96" r="2.6" fill="#fff"/><circle cx="123" cy="96" r="2.6" fill="#fff"/></g>
+            <circle cx="68" cy="120" r="8" fill="#ff8f8f" opacity=".55"/><circle cx="132" cy="120" r="8" fill="#ff8f8f" opacity=".55"/>
+            <path class="mouth happy" d="M82 122 Q100 146 118 122 Z" fill="#7a1f3d"/>
+            <path class="mouth oops" d="M86 134 Q100 120 114 134" fill="none" stroke="#7a1f3d" stroke-width="5" stroke-linecap="round"/>
+          </g>
+        </svg>
+        <div class="bubble" id="bubble" aria-hidden="true">Hi! Read my story!</div>
+      </div>
+
+      <h2 id="storyTitle">Read Daniel's story</h2>
+      <p class="instr"><strong>How to play:</strong> 1) Read or listen to the text. 2) Type your answer. 3) Press “Check answer”. Need help? Press “Hint”!</p>
+
+      <div class="listen-row" id="listenRow">
+        <button class="btn b-listen" id="listenBtn" type="button"><span aria-hidden="true">🔊</span> <span id="listenLabel">Listen to the story</span></button>
+        <button class="btn b-reset b-small" id="slowBtn" type="button" aria-pressed="false"><span aria-hidden="true">🐢</span> Slow voice: off</button>
+      </div>
+      <article class="story-text" id="storyText" lang="en"></article>
+      <p class="note" id="ttsNote">Tip: tap any sentence to hear it.</p>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="card" aria-labelledby="qTitle">
+      <div id="quizView">
+        <div class="qhead">
+          <span class="qbadge" id="qBadge">Question 1</span>
+          <button class="btn b-listen b-small" id="listenQ" type="button"><span aria-hidden="true">🔊</span> Listen to the question</button>
+        </div>
+        <h2 id="qTitle"></h2>
+
+        <label for="answer">Your answer</label>
+        <input type="text" id="answer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer here…" maxlength="120">
+
+        <div class="actions">
+          <button class="btn b-main" id="checkBtn" type="button"><span aria-hidden="true">✔</span> Check answer</button>
+          <button class="btn b-hint" id="hintBtn" type="button"><span aria-hidden="true">💡</span> <span id="hintLabel">Hint (2 left)</span></button>
+          <button class="btn b-next" id="nextBtn" type="button" hidden>Next <span aria-hidden="true">➜</span></button>
+          <button class="btn b-reset" id="restartBtn" type="button"><span aria-hidden="true">↺</span> Restart</button>
+        </div>
+
+        <div class="feedback" id="fb" role="status" aria-live="polite">
+          <span class="ico" id="fbIcon" aria-hidden="true">🎵</span>
+          <div><strong id="fbTitle">Ready?</strong><span id="fbBody">Read the story, then write a short answer.</span></div>
+        </div>
+        <ol class="dots" id="dots" aria-label="Questions"></ol>
+      </div>
+
+      <div class="result" id="result" hidden>
+        <div class="trophy" aria-hidden="true">🏆</div>
+        <h2 id="resTitle">Great concert!</h2>
+        <div class="big-stars" id="resStars" aria-hidden="true"></div>
+        <div class="rank" id="resRank"></div>
+        <p id="resText"></p>
+        <ul class="summary" id="resList"></ul>
+        <div class="actions" style="justify-content:center">
+          <button class="btn b-main" id="againBtn" type="button"><span aria-hidden="true">↺</span> Play again</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>The Soundtrack of Your Life · Reading 1 · Level A1–A2</footer>
+</div>
+
+<style>.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}</style>
+
+<script>
+(() => {
+"use strict";
+const $ = s => document.querySelector(s);
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const rnd = a => a[Math.floor(Math.random() * a.length)];
+
+/* ---------- Reading text (exact) ---------- */
+const STORY = [
+  [ {id:"s1",t:"Hi! My name is Daniel."},
+    {id:"s2",t:"I am 18 years old and I love music."},
+    {id:"s3",t:"I usually listen to music in the morning and in the afternoon."},
+    {id:"s4",t:"My favorite type of music is pop because it makes me feel happy and energetic."} ],
+  [ {id:"s5",t:"My favorite singer is Bruno Mars."},
+    {id:"s6",t:"I like his songs because they have a good rhythm and I can dance to them."},
+    {id:"s7",t:"My favorite song is Count on Me."},
+    {id:"s8",t:"I listen to this song with my friends and sometimes with my family."} ],
+  [ {id:"s9",t:"I also like rock music, but I do not listen to it every day."},
+    {id:"s10",t:"I do not like very sad songs because I prefer music that makes me feel good."} ]
+];
+const ALL = STORY.flat();
+
+/* ---------- Answer checking (accepts equivalent answers & small typos) ---------- */
+function norm(s){
+  return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/['’`]/g,"").replace(/[^a-z0-9\s]/g," ").replace(/\s+/g," ").trim();
+}
+function lev(a,b){
+  const m=a.length,n=b.length; if(!m) return n; if(!n) return m;
+  let prev=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){
+    const cur=[i];
+    for(let j=1;j<=n;j++) cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+    prev=cur;
+  }
+  return prev[n];
+}
+function has(tokens,w,exact){
+  const L=w.length, max=exact?0:(L>=6?2:(L===5?1:0));
+  return tokens.some(t => t===w || (max>0 && Math.abs(t.length-L)<=max && lev(t,w)<=max));
+}
+const ok   = ()=>({r:"ok"});
+const no   = m=>({r:"no",m});
+const part = m=>({r:"part",m});
+
+const Q = [
+  { text:"How old is Daniel?", sent:["s2"],
+    clue:"The answer is a number. Look for “years old”.",
+    model:"Daniel is 18 years old.",
+    check:(t,n)=> (n.includes("18")||has(t,"eighteen")) ? ok() : no("Look for the number in the story.") },
+  { text:"When does Daniel usually listen to music?", sent:["s3"],
+    clue:"There are two times of the day. Write both!",
+    model:"He usually listens to music in the morning and in the afternoon.",
+    check:(t)=>{ const m=has(t,"morning"), a=has(t,"afternoon");
+      return (m&&a)?ok():(m||a)?part("Good! You found one time of the day. There is one more!"):no("Look for the times of the day in the story."); } },
+  { text:"What is Daniel's favorite type of music?", sent:["s4"],
+    clue:"It is a short word: p _ _",
+    model:"His favorite type of music is pop.",
+    check:(t)=> has(t,"pop",true) ? ok() : has(t,"rock",true) ? no("Daniel likes rock too, but it is not his favorite.") : no("Find “My favorite type of music is…”.") },
+  { text:"Who is Daniel's favorite singer?", sent:["s5"],
+    clue:"Two names: B _ _ _ _  M _ _ _",
+    model:"His favorite singer is Bruno Mars.",
+    check:(t)=> (has(t,"bruno")||has(t,"mars",true)) ? ok() : no("Find “My favorite singer is…”.") },
+  { text:"Why does Daniel like Bruno Mars' songs?", sent:["s6"],
+    clue:"Start with “Because…” — his songs have a good… and he can… to them.",
+    model:"Because they have a good rhythm and he can dance to them.",
+    check:(t)=> (has(t,"rhythm")||has(t,"dance")||has(t,"dancing")) ? ok() : no("Read the sentence that starts with “I like his songs because…”.") },
+  { text:"Does Daniel like sad songs?", sent:["s10"],
+    clue:"Answer with “Yes, he does.” or “No, he doesn't.”",
+    model:"No, he doesn't. He prefers music that makes him feel good.",
+    check:(t)=>{
+      const neg = ["no","not","doesnt","dont","dislike","dislikes","hate","hates","never"].some(w=>t.includes(w));
+      const yes = t.includes("yes")||t.includes("yeah");
+      if(neg && !yes) return ok();
+      if(yes && !neg) return no("Read the last sentence again. Does Daniel like very sad songs?");
+      return no("Answer with Yes or No. Check the last sentence of the story.");
+    } }
+];
+
+/* ---------- Sound effects (Web Audio, no files) ---------- */
+let audioCtx=null, muted=false;
+function tone(freq,start,dur,type,vol){
+  if(muted) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended") audioCtx.resume();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain(), t0=audioCtx.currentTime+start;
+    o.type=type||"triangle"; o.frequency.value=freq;
+    g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(vol||.15,t0+.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    o.connect(g); g.connect(audioCtx.destination); o.start(t0); o.stop(t0+dur+.05);
+  }catch(e){}
+}
+const sfx = {
+  good(){[523.25,659.25,783.99,1046.5].forEach((f,i)=>tone(f,i*.09,.28));},
+  bad(){tone(247,0,.2,"sine",.12); tone(196,.17,.3,"sine",.12);},
+  hint(){tone(880,0,.15,"sine",.1); tone(1174,.1,.2,"sine",.1);},
+  win(){[523,659,784,659,784,1047,1319].forEach((f,i)=>tone(f,i*.12,.32,"triangle",.16));}
+};
+
+/* ---------- Read aloud (Web Speech API) ---------- */
+const synth = ("speechSynthesis" in window) ? window.speechSynthesis : null;
+let voices=[], slow=false, token=0, speaking=false;
+function loadVoices(){ if(synth) voices=synth.getVoices(); }
+if(synth){ loadVoices(); synth.onvoiceschanged=loadVoices; }
+function pickVoice(){
+  return voices.find(v=>/^en[-_]US/i.test(v.lang)) || voices.find(v=>/^en/i.test(v.lang)) || null;
+}
+function clearSpeaking(){ document.querySelectorAll(".sent.speaking").forEach(e=>e.classList.remove("speaking")); }
+function setListenUI(on){
+  speaking=on;
+  $("#listenLabel").textContent = on ? "Stop" : "Listen to the story";
+}
+function stopSpeaking(){
+  token++; if(synth) synth.cancel(); clearSpeaking(); setListenUI(false);
+}
+function speakList(items,fromStory){
+  if(!synth) return;
+  token++; const my=token; synth.cancel(); clearSpeaking();
+  if(fromStory) setListenUI(true); else setListenUI(false);
+  let i=0;
+  const next=()=>{
+    if(my!==token) return;
+    if(i>=items.length){ clearSpeaking(); if(fromStory) setListenUI(false); return; }
+    const it=items[i++];
+    const u=new SpeechSynthesisUtterance(it.text);
+    u.lang="en-US"; const v=pickVoice(); if(v) u.voice=v;
+    u.rate = slow ? .65 : .88; u.pitch=1.05;
+    u.onstart=()=>{ if(my!==token) return; clearSpeaking(); if(it.el) it.el.classList.add("speaking"); };
+    u.onend=()=>{ if(it.el) it.el.classList.remove("speaking"); next(); };
+    u.onerror=()=>{ if(my===token){ clearSpeaking(); setListenUI(false);} };
+    synth.speak(u);
+  };
+  setTimeout(next,80);
+}
+
+/* ---------- Confetti & floating notes ---------- */
+const cv=$("#confetti"), cx=cv.getContext("2d"); let parts=[], raf=null, W=0, H=0;
+function resize(){
+  const d=window.devicePixelRatio||1; W=window.innerWidth; H=window.innerHeight;
+  cv.width=W*d; cv.height=H*d; cx.setTransform(d,0,0,d,0,0);
+}
+window.addEventListener("resize",resize); resize();
+const COLORS=["#ff3d81","#5b3de8","#ffc83d","#12a594","#ff7a59","#4aa8ff"], GLYPHS=["♪","♫","★","●","■","♬"];
+function burst(n,x,y){
+  if(reduced) return;
+  x = x ?? W/2; y = y ?? H/3;
+  for(let i=0;i<n;i++) parts.push({x,y,vx:(Math.random()-.5)*12,vy:-Math.random()*11-3,g:.28,r:Math.random()*6,vr:(Math.random()-.5)*.3,
+    s:14+Math.random()*16,c:rnd(COLORS),ch:rnd(GLYPHS),life:0});
+  if(!raf) raf=requestAnimationFrame(loop);
+}
+function loop(){
+  cx.clearRect(0,0,W,H);
+  parts=parts.filter(p=>p.y<H+40 && p.life<200);
+  for(const p of parts){
+    p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.vx*=.99; p.r+=p.vr; p.life++;
+    cx.save(); cx.translate(p.x,p.y); cx.rotate(p.r); cx.fillStyle=p.c; cx.font="900 "+p.s+"px sans-serif";
+    cx.textAlign="center"; cx.textBaseline="middle"; cx.fillText(p.ch,0,0); cx.restore();
+  }
+  raf = parts.length ? requestAnimationFrame(loop) : (cx.clearRect(0,0,W,H),null);
+}
+(function floatingNotes(){
+  if(reduced) return; const box=$("#bgNotes");
+  for(let i=0;i<14;i++){
+    const s=document.createElement("span");
+    s.textContent=rnd(["♪","♫","♬","♩"]); s.style.left=(Math.random()*100)+"%";
+    s.style.fontSize=(22+Math.random()*34)+"px"; s.style.animationDuration=(14+Math.random()*16)+"s";
+    s.style.animationDelay=(-Math.random()*20)+"s"; box.appendChild(s);
+  }
+})();
+
+/* ---------- Game state ---------- */
+const PRAISE=["Awesome!","You rock!","Perfect pitch!","Great job!","Bravo!","Superstar!","Music to my ears!"];
+const TRY_AGAIN=["Almost! Try again.","Not yet — you can do it!","Keep going, rock star!"];
+let idx=0, cur=null, results=[], totalStars=0, totalPoints=0;
+
+const el = {
+  story:$("#storyText"), char:$("#char"), bubble:$("#bubble"), answer:$("#answer"), qTitle:$("#qTitle"), qBadge:$("#qBadge"),
+  check:$("#checkBtn"), hint:$("#hintBtn"), hintLabel:$("#hintLabel"), next:$("#nextBtn"), fb:$("#fb"), fbIcon:$("#fbIcon"),
+  fbTitle:$("#fbTitle"), fbBody:$("#fbBody"), dots:$("#dots"), bar:$("#bar"), prog:$("#progress"), progLabel:$("#progLabel"),
+  stars:$("#starCount"), points:$("#pointCount")
+};
+
+function renderStory(){
+  el.story.innerHTML="";
+  STORY.forEach(par=>{
+    const p=document.createElement("p");
+    par.forEach(s=>{
+      const sp=document.createElement("span"); sp.className="sent"; sp.id=s.id; sp.textContent=s.t; sp.title="Tap to listen";
+      sp.addEventListener("click",()=>speakList([{text:s.t,el:sp}],false));
+      p.appendChild(sp); p.appendChild(document.createTextNode(" "));
+    });
+    el.story.appendChild(p);
+  });
+}
+function say(text){
+  el.bubble.textContent=text; el.bubble.classList.remove("pop"); void el.bubble.offsetWidth; el.bubble.classList.add("pop");
+}
+function mood(kind){
+  el.char.classList.remove("cheer","shake"); void el.char.getBoundingClientRect();
+  if(kind==="cheer"){ el.char.dataset.mood="happy"; el.char.classList.add("cheer"); }
+  else if(kind==="oops"){ el.char.dataset.mood="oops"; el.char.classList.add("shake"); }
+  else el.char.dataset.mood="happy";
+}
+function feedback(kind,title,body){
+  el.fb.className="feedback "+kind;
+  el.fbIcon.textContent=({ok:"🎉",bad:"🎧",info:"💡",part:"🎶"})[kind]||"🎵";
+  el.fbTitle.textContent=title; el.fbBody.textContent=body||"";
+}
+function clearHints(){ document.querySelectorAll(".sent.hint").forEach(e=>e.classList.remove("hint")); }
+function updateHeader(){
+  el.stars.textContent=totalStars; el.points.textContent=totalPoints;
+}
+function updateProgress(){
+  const done=results.length;
+  el.bar.style.width=(done/Q.length*100)+"%";
+  el.prog.setAttribute("aria-valuenow",done);
+  el.progLabel.textContent = done>=Q.length ? "All done!" : "Question "+(idx+1)+" of "+Q.length;
+}
+function buildDots(){
+  el.dots.innerHTML="";
+  Q.forEach((_,i)=>{
+    const li=document.createElement("li"); li.className="dot"; li.textContent=i+1;
+    const r=results[i];
+    if(r){ li.classList.add(r.stars>0?"done":"miss"); li.textContent=r.stars>0?"★":"•"; li.setAttribute("aria-label","Question "+(i+1)+": "+r.stars+" stars"); }
+    else if(i===idx){ li.classList.add("current"); li.setAttribute("aria-current","step"); }
+    el.dots.appendChild(li);
+  });
+}
+function startQuestion(focus){
+  cur={attempts:0,hints:0,done:false};
+  const q=Q[idx];
+  el.qBadge.textContent="Question "+(idx+1)+" of "+Q.length;
+  el.qTitle.textContent=q.text;
+  el.answer.value=""; el.answer.disabled=false; el.answer.className="";
+  el.check.disabled=false; el.hint.disabled=false; el.next.hidden=true; el.next.classList.remove("pulse");
+  el.hintLabel.textContent="Hint (2 left)";
+  clearHints(); mood("idle");
+  feedback("info","Your turn!","Write a short answer, then press “Check answer”.");
+  say(rnd(["Let's go!","You can do it!","Think about the story!"]));
+  updateProgress(); buildDots();
+  if(focus) el.answer.focus({preventScroll:true});
+}
+
+function finish(correct){
+  cur.done=true;
+  const q=Q[idx];
+  let stars=0;
+  if(correct) stars=Math.max(1,3-(cur.hints>0?1:0)-(cur.attempts-1));
+  results[idx]={stars,revealed:!correct};
+  totalStars+=stars; totalPoints+=stars*10;
+  el.answer.disabled=true; el.check.disabled=true; el.hint.disabled=true;
+  el.next.hidden=false; el.next.classList.add("pulse");
+  el.next.innerHTML = (idx===Q.length-1 ? "See my results 🏆" : "Next ➜");
+  q.sent.forEach(id=>{ const s=document.getElementById(id); if(s) s.classList.add("hint"); });
+  if(correct){
+    el.answer.className="good";
+    feedback("ok",rnd(PRAISE)+" "+"⭐".repeat(stars), "Full answer: "+q.model);
+    sfx.good(); mood("cheer"); say(rnd(PRAISE));
+    const r=el.answer.getBoundingClientRect(); burst(34,r.left+r.width/2,r.top);
+  }else{
+    el.answer.className="bad";
+    feedback("bad","Good try! Here is the answer:",q.model);
+    sfx.bad(); mood("oops"); say("Let's learn it!");
+  }
+  updateHeader(); updateProgress(); buildDots();
+  el.next.focus({preventScroll:true});
+}
+
+function onCheck(){
+  if(!cur || cur.done) return;
+  const raw=el.answer.value.trim();
+  if(!raw){ feedback("info","Write your answer first!","Type a short answer in the box."); el.answer.focus(); return; }
+  const res=Q[idx].check(norm(raw).split(" "),norm(raw));
+  cur.attempts++;
+  if(res.r==="ok"){ finish(true); return; }
+  if(cur.attempts>=3){ finish(false); return; }
+  const left=3-cur.attempts;
+  feedback(res.r==="part"?"part":"bad", res.r==="part"?"Almost there!":rnd(TRY_AGAIN),
+    (res.m||"Read the story again.")+" ("+left+(left===1?" try":" tries")+" left)");
+  sfx.bad(); mood("oops"); say("Try again!"); el.answer.classList.add("bad"); el.answer.select();
+}
+function onHint(){
+  if(!cur || cur.done) return;
+  if(cur.hints>=2){ feedback("info","No more hints","You can do it! Check the highlighted sentence."); return; }
+  cur.hints++; sfx.hint();
+  if(cur.hints===1){
+    clearHints();
+    Q[idx].sent.forEach(id=>{ const s=document.getElementById(id); if(s){ s.classList.add("hint"); s.scrollIntoView({behavior:reduced?"auto":"smooth",block:"nearest"}); } });
+    feedback("info","Hint 1","Read the green sentence in the story. The answer is there!");
+  }else{
+    feedback("info","Hint 2",Q[idx].clue);
+  }
+  el.hintLabel.textContent="Hint ("+(2-cur.hints)+" left)";
+  if(cur.hints>=2) el.hint.disabled=true;
+  el.answer.focus({preventScroll:true});
+}
+function onNext(){
+  stopSpeaking();
+  if(idx>=Q.length-1){ showResults(); return; }
+  idx++; startQuestion(true);
+}
+function showResults(){
+  $("#quizView").hidden=true; $("#result").hidden=false;
+  updateProgress();
+  const max=Q.length*3;
+  const rank = totalStars>=16 ? ["Platinum Superstar 🏆","Amazing! You are a reading rock star!"]
+             : totalStars>=12 ? ["Gold Record 🥇","Great job! You understood Daniel's story very well."]
+             : totalStars>=7  ? ["Silver Record 🥈","Good work! Read the story again to get more stars."]
+             : ["Rising Star 🌟","Nice try! Listen to the story and play again."];
+  $("#resTitle").textContent="Great concert!";
+  $("#resStars").textContent=totalStars+" / "+max+" ⭐";
+  $("#resRank").textContent=rank[0];
+  $("#resText").textContent=rank[1]+" You have "+totalPoints+" points.";
+  const ul=$("#resList"); ul.innerHTML="";
+  Q.forEach((q,i)=>{
+    const li=document.createElement("li"); const a=document.createElement("span"), b=document.createElement("span");
+    a.textContent=(i+1)+". "+q.text; b.textContent=results[i].stars>0?"⭐".repeat(results[i].stars):"—";
+    b.setAttribute("aria-label",results[i].stars+" stars"); li.append(a,b); ul.appendChild(li);
+  });
+  sfx.win(); mood("cheer"); say("You did it!");
+  burst(110); setTimeout(()=>burst(80,W*.2,H*.4),400); setTimeout(()=>burst(80,W*.8,H*.4),700);
+  $("#againBtn").focus({preventScroll:true});
+}
+function restart(){
+  stopSpeaking(); clearHints();
+  idx=0; results=[]; totalStars=0; totalPoints=0;
+  $("#result").hidden=true; $("#quizView").hidden=false;
+  updateHeader(); startQuestion(false); say("Let's play again!");
+  window.scrollTo({top:0,behavior:reduced?"auto":"smooth"});
+}
+
+/* ---------- Events ---------- */
+el.check.addEventListener("click",onCheck);
+el.hint.addEventListener("click",onHint);
+el.next.addEventListener("click",onNext);
+$("#restartBtn").addEventListener("click",restart);
+$("#againBtn").addEventListener("click",restart);
+el.answer.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); onCheck(); } });
+el.answer.addEventListener("input",()=>{ el.answer.classList.remove("bad"); if(el.char.dataset.mood==="oops") mood("idle"); });
+$("#soundBtn").addEventListener("click",e=>{
+  muted=!muted; const b=e.currentTarget; b.textContent=muted?"🔇":"🔊"; b.setAttribute("aria-pressed",String(muted));
+  b.setAttribute("aria-label",muted?"Sound effects: off. Press to turn on.":"Sound effects: on. Press to mute.");
+});
+if(synth){
+  $("#listenBtn").addEventListener("click",()=>{
+    if(speaking){ stopSpeaking(); return; }
+    speakList(ALL.map(s=>({text:s.t,el:document.getElementById(s.id)})),true);
+  });
+  $("#listenQ").addEventListener("click",()=>{ stopSpeaking(); speakList([{text:Q[idx].text}],false); });
+  $("#slowBtn").addEventListener("click",e=>{
+    slow=!slow; const b=e.currentTarget; b.setAttribute("aria-pressed",String(slow));
+    b.innerHTML='<span aria-hidden="true">'+(slow?"🐢":"🐇")+'</span> Slow voice: '+(slow?"on":"off");
+  });
+  window.addEventListener("pagehide",stopSpeaking);
+}else{
+  $("#listenRow").hidden=true; $("#listenQ").hidden=true;
+  $("#ttsNote").textContent="Your browser cannot read aloud. Please read the text carefully.";
+}
+
+/* ---------- Start ---------- */
+renderStory(); updateHeader(); startQuestion(false);
+})();
+</script>
+</body>
+</html>
